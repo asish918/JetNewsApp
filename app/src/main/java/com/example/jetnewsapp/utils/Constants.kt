@@ -1,6 +1,6 @@
 package com.example.jetnewsapp.utils
 
-import com.hadi.headlinescompose.data.model.NewsResponse
+import com.example.jetnewsapp.data.model.NewsResponse
 
 const val STARTING_INDEX = 1
 const val NETWORK_PAGE_SIZE = 10
