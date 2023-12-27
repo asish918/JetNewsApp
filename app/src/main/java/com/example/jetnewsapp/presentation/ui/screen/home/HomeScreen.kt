@@ -54,11 +54,7 @@ fun HomeScreen(
                         .padding(start = 8.dp, end = 8.dp, top = 12.dp),
                     categories = viewModel.categories
                 ) {
-                    navController.currentBackStackEntry?.arguments?.putString(
-                        "category",
-                        it
-                    )
-                    navController.navigate(Screen.News.route)
+                    navController.navigate("${Screen.News.route}/${it}")
                 }
             }
 

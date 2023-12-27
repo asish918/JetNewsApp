@@ -12,14 +12,13 @@ import androidx.paging.compose.collectAsLazyPagingItems
 @Composable
 fun NewsScreen(
     navController: NavController,
+    category: String?,
     newsViewModel: NewsViewModel = hiltViewModel(),
 ) {
 
     LaunchedEffect(key1 = true) {
-        val category =
-            navController.previousBackStackEntry?.arguments?.getString("category") ?: "technology"
-        newsViewModel.getNewsByCategory(category)
-        Log.d("SelectedCategory", "NewsScreen: $category")
+        newsViewModel.getNewsByCategory(category ?: "technology")
+        Log.i("SelectedCategory", "NewsScreen: $category")
     }
 
     val news = newsViewModel.allNews.collectAsLazyPagingItems()
@@ -27,7 +26,9 @@ fun NewsScreen(
 
     Scaffold(
         topBar = {
-            NewsAppBar() {
+            NewsAppBar(
+                title = category
+            ) {
                 navController.navigateUp()
             }
         },

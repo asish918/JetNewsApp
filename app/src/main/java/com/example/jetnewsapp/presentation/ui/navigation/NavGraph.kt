@@ -53,10 +53,16 @@ fun AppNavGraph(
             DetailScreen(navController = navController, newsItem = newsItem)
 
         }
-        composable(route = Screen.News.route) {
+        composable(
+            route = "${Screen.News.route}/{category}",
+            arguments = listOf(
+                navArgument("category") { type = NavType.StringType }
+            )
+        ) {
 
             NewsScreen(
-                navController = navController
+                navController = navController,
+                category = it.arguments?.getString("category")
             )
         }
 

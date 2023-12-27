@@ -19,12 +19,13 @@ import com.example.jetnewsapp.R
 
 @Composable
 fun NewsAppBar(
+    title: String?,
     onBackClick: () -> Unit
 ) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(start = 8.dp, end = 8.dp, top = 36.dp)
+            .padding(start = 8.dp, end = 8.dp, top = 56.dp)
     ) {
         Row(
             modifier = Modifier
@@ -46,7 +47,7 @@ fun NewsAppBar(
             )
 
             Text(
-                text = "NEWS",
+                text = title ?: "NEWS",
                 fontFamily = RockWell,
                 fontWeight = FontWeight.Bold,
                 fontSize = 18.sp
@@ -76,5 +77,7 @@ fun NewsAppBar(
 @Preview
 @Composable
 fun NewsAppBarPreview() {
-    NewsAppBar() {}
+    NewsAppBar(
+        title = "NEWS"
+    ) {}
 }

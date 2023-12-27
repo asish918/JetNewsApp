@@ -48,7 +48,9 @@ fun DetailScreen(
 
     Scaffold(
         topBar = {
-            NewsAppBar() {
+            NewsAppBar(
+                title = null
+            ) {
                 navController.navigateUp()
             }
         },

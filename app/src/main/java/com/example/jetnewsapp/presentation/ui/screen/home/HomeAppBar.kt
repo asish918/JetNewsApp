@@ -16,9 +16,18 @@ import com.example.jetnewsapp.presentation.ui.theme.Black
 import com.example.jetnewsapp.presentation.ui.theme.Calisto
 import com.example.jetnewsapp.presentation.ui.theme.RockWell
 import com.example.jetnewsapp.utils.ResourceDrawable
+import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.ZoneId
+import java.util.Date
+import java.util.Locale
 
 @Composable
 fun HomeAppBar() {
+    val currentDate = LocalDate.now()
+    val formatter = SimpleDateFormat("EEEE, MMMM d, yyyy", Locale.getDefault())
+    val formattedDate = formatter.format(Date.from(currentDate.atStartOfDay(ZoneId.systemDefault()).toInstant()))
+
 
     Column(
         modifier = Modifier.fillMaxWidth()
@@ -36,7 +45,7 @@ fun HomeAppBar() {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 12.dp, start = 8.dp, end = 8.dp),
+                .padding(top = 20.dp, start = 8.dp, end = 8.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -53,13 +62,13 @@ fun HomeAppBar() {
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = "LATEST NEWS",
+                    text = "DAILY NEWS",
                     fontFamily = RockWell,
                     fontWeight = FontWeight.Bold,
                     fontSize = 20.sp
                 )
                 Text(
-                    text = "Sunday, June 11, 1920",
+                    text = formattedDate,
                     fontFamily = Calisto,
                     fontSize = 16.sp
                 )

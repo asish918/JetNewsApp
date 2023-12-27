@@ -56,7 +56,7 @@ fun SplashScreen(
                         .fillMaxHeight()
                         .weight(1f)
                         .padding(start = 4.dp, top = 12.dp, end = 8.dp),
-                    painter = painterResource(id = R.drawable.gas_station),
+                    painter = painterResource(id = R.drawable.business),
                     title = "BUSINESS"
                 )
 
@@ -71,7 +71,7 @@ fun SplashScreen(
                         .fillMaxHeight()
                         .weight(1f)
                         .padding(start = 8.dp, top = 8.dp, end = 4.dp),
-                    painter = painterResource(id = R.drawable.model_woman),
+                    painter = painterResource(id = R.drawable.scarlett),
                     title = "FASHION"
                 )
 
@@ -80,7 +80,7 @@ fun SplashScreen(
                         .fillMaxHeight()
                         .weight(2f)
                         .padding(start = 4.dp, top = 8.dp, end = 8.dp),
-                    painter = painterResource(id = R.drawable.lifestyle),
+                    painter = painterResource(id = R.drawable.tech),
                     title = "TECHNOLOGY"
                 )
 
@@ -115,6 +115,7 @@ fun SplashScreen(
                 fontFamily = RockWell,
                 fontWeight = FontWeight.Bold,
                 fontSize = 32.sp,
+                lineHeight = 42.sp,
                 textAlign = TextAlign.Center
             )
 
