@@ -43,7 +43,8 @@ fun HomeScreen(
 
     Scaffold(
         topBar = { HomeAppBar(
-            openDrawer = openDrawer
+            openDrawer = openDrawer,
+            navController = navController
         ) },
         backgroundColor = Color.Transparent,
     ) {

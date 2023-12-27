@@ -14,8 +14,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import coil.compose.AsyncImagePainter.State.Empty.painter
 import com.example.jetnewsapp.R
+import com.example.jetnewsapp.presentation.ui.navigation.Screen
 import com.example.jetnewsapp.presentation.ui.theme.Black
 import com.example.jetnewsapp.presentation.ui.theme.Calisto
 import com.example.jetnewsapp.presentation.ui.theme.RockWell
@@ -29,7 +31,8 @@ import java.util.Locale
 @Composable
 fun HomeAppBar(
     openDrawer: () -> Unit = {},
-) {
+    navController: NavController?,
+    ) {
     val currentDate = LocalDate.now()
     val formatter = SimpleDateFormat("EEEE, MMMM d, yyyy", Locale.getDefault())
     val formattedDate = formatter.format(Date.from(currentDate.atStartOfDay(ZoneId.systemDefault()).toInstant()))
@@ -52,7 +55,7 @@ fun HomeAppBar(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 2.dp, start = 8.dp, end = 8.dp),
+                .padding(top = 20.dp, start = 8.dp, end = 8.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -90,13 +93,20 @@ fun HomeAppBar(
                 )
             }
 
-            Image(
+            IconButton(
+                onClick = {
+                    navController?.navigate(Screen.Search.route)
+                },
                 modifier = Modifier
                     .width(40.dp)
                     .height(40.dp),
-                painter = painterResource(id = ResourceDrawable.ic_search),
-                contentDescription = null
-            )
+            ) {
+                Image(
+
+                    painter = painterResource(id = ResourceDrawable.ic_search),
+                    contentDescription = null
+                )
+            }
         }
 
         Box(
@@ -115,5 +125,7 @@ fun HomeAppBar(
 @Preview
 @Composable
 fun HomeAppBarPreview() {
-    HomeAppBar()
+    HomeAppBar(
+        navController = null
+    )
 }

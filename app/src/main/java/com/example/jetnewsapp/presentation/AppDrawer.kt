@@ -17,6 +17,7 @@ import androidx.compose.material.icons.automirrored.filled.ListAlt
 import androidx.compose.material.icons.automirrored.filled.MenuBook
 import androidx.compose.material.icons.filled.Bookmark
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalDrawerSheet
@@ -30,13 +31,16 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.jetnewsapp.R
 import com.example.jetnewsapp.presentation.ui.navigation.Screen
 import com.example.jetnewsapp.presentation.ui.theme.Grey
 import com.example.jetnewsapp.presentation.ui.theme.JetNewsAppTheme
 import com.example.jetnewsapp.presentation.ui.theme.PrimaryRed
+import com.example.jetnewsapp.presentation.ui.theme.RockWell
 import com.example.jetnewsapp.presentation.ui.theme.ShimmerDarkGray
 
 @Composable
@@ -81,7 +85,7 @@ fun AppDrawer(
                 Spacer(modifier = Modifier.height(20.dp))
                 NavigationDrawerItem(
                     label = { Text(stringResource(id = R.string.saved_title), color = Color.White) },
-                    icon = { Icon(Icons.Filled.Bookmark, null, tint = Color.White) },
+                    icon = { Icon(Icons.Filled.Search, null, tint = Color.White) },
                     selected = currentRoute == Screen.News.route,
                     onClick = { navigateToInterests(); closeDrawer() },
                     modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding),
@@ -102,11 +106,12 @@ private fun JetNewsLogo(modifier: Modifier = Modifier) {
             contentDescription = null,
         )
         Spacer(Modifier.width(8.dp))
-         Image(
-             painter = painterResource(R.drawable.newspaper_logo),
-             modifier = Modifier,
-             contentDescription = "news_logo"
-         )
+        Text(
+            text = "Menu",
+            fontFamily = RockWell,
+            fontWeight = FontWeight.Bold,
+            fontSize = 20.sp
+        )
     }
 }
 

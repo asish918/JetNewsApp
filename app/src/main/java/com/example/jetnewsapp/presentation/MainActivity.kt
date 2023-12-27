@@ -43,7 +43,7 @@ class MainActivity : ComponentActivity() {
                         AppDrawer(
                             currentRoute = currentRoute,
                             navigateToHome = { navController.navigate(Screen.Home.route) },
-                            navigateToInterests = { navController.navigate("${Screen.Home.route}/Sports") },
+                            navigateToInterests = { navController.navigate(Screen.Search.route) },
                             closeDrawer = { coroutineScope.launch { drawerState.close() } }
                         )
                     },

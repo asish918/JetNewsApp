@@ -11,6 +11,7 @@ import com.example.jetnewsapp.presentation.ui.screen.details.DetailScreen
 import com.example.jetnewsapp.presentation.ui.screen.home.HomeScreen
 import com.example.jetnewsapp.presentation.ui.screen.intro.SplashScreen
 import com.example.jetnewsapp.presentation.ui.screen.news.NewsScreen
+import com.example.jetnewsapp.presentation.ui.screen.search.SearchScreen
 import com.example.jetnewsapp.utils.decode
 
 @Composable
@@ -29,6 +30,9 @@ fun AppNavGraph(
         }
         composable(route = Screen.Home.route) {
             HomeScreen(navController = navController, openDrawer = openDrawer)
+        }
+        composable(route = Screen.Search.route) {
+            SearchScreen(navController = navController)
         }
         composable(
             route = "${Screen.Detail.route}/{title}/{desc}/{imgUrl}/{content}/{pubAt}/{author}",
