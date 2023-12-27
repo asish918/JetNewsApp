@@ -15,12 +15,14 @@ import com.example.jetnewsapp.presentation.ui.components.ShimmerEffect
 import com.example.jetnewsapp.presentation.ui.navigation.Screen
 import com.example.jetnewsapp.presentation.ui.theme.Black
 import com.example.jetnewsapp.presentation.ui.theme.SMALL_PADDING
+import com.example.jetnewsapp.utils.encode
 
 @Composable
 fun ListContent(
-    news: LazyPagingItems<NewsResponse.Article>,
     navController: NavController,
+    news: LazyPagingItems<NewsResponse.Article>,
 ) {
+
     val result = handlePagingResult(news = news)
 
     if (result) {
@@ -28,14 +30,19 @@ fun ListContent(
             contentPadding = PaddingValues(horizontal = 8.dp),
             verticalArrangement = Arrangement.spacedBy(SMALL_PADDING)
         ) {
-            items(
-                count = news.itemCount
-            ) { index ->
+            items(news.itemCount) { index ->
                 val item = news[index]
+
                 item?.let {
                     NewsItem(news = it) {
-                        navController.currentBackStackEntry?.arguments?.putParcelable("news", item)
-                        navController.navigate(Screen.Detail.route)
+                        val encodedTitle = encode(item.title)
+                        val encodedDesc = encode(item.description)
+                        val encodedImgUrl = encode(item.urlToImage)
+                        val encodedContent = encode(item.content)
+                        val encodedPubAt = encode(item.publishedAt)
+                        val encodedAuthor = encode(item.author)
+                        val navArgs = "${encodedTitle}/${encodedDesc}/${encodedImgUrl}/${encodedContent}/${encodedPubAt}/${encodedAuthor}"
+                        navController.navigate("${Screen.Detail.route}/${navArgs}")
                     }
                     Box(
                         modifier = Modifier

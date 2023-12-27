@@ -15,7 +15,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.HorizontalPagerIndicator
 import com.google.accompanist.pager.rememberPagerState
@@ -27,8 +26,8 @@ import com.example.jetnewsapp.presentation.ui.theme.PAGING_INDICATOR_WIDTH
 import com.example.jetnewsapp.presentation.ui.theme.PrimaryRed
 import com.example.jetnewsapp.presentation.ui.screen.news.NewsItem
 import com.example.jetnewsapp.utils.ResourceDrawable
+import com.example.jetnewsapp.utils.encode
 
-@OptIn(ExperimentalPagerApi::class)
 @Composable
 fun HomeScreen(
     navController: NavController,
@@ -156,12 +155,16 @@ fun HomeScreen(
 
             }
 
-            itemsIndexed(everything) { index, news ->
+            itemsIndexed(everything) { index, item ->
                 NewsItem(
-                    news = news
+                    news = item
                 ) {
-                    navController.currentBackStackEntry?.arguments?.putParcelable("news", news)
-                    navController.navigate(Screen.Detail.route)
+                    val encodedImgUrl = encode(item.urlToImage)
+                    val encodedContent = encode(item.content)
+                    val encodedPubAt = encode(item.publishedAt)
+                    val encodedAuthor = encode(item.author)
+                    val navArgs = "${item.title}/${item.description}/${encodedImgUrl}/${encodedContent}/${encodedPubAt}/${encodedAuthor}"
+                    navController.navigate("${Screen.Detail.route}/${navArgs}")
                 }
                 if (index < everything.lastIndex) {
                     Box(

@@ -35,7 +35,7 @@ fun NewsItem(
 
     Row(
         modifier = Modifier
-            .fillMaxWidth(fraction = .3f)
+            .fillMaxWidth(fraction = 3f)
             .height(NEWS_ITEM_HEIGHT)
             .clickable { onNewsItemClick() },
     ) {
@@ -58,16 +58,18 @@ fun NewsItem(
                 .fillMaxHeight()
                 .weight(2f),
         ) {
-            Text(
-                modifier = Modifier.padding(top = 8.dp, end = 4.dp),
-                text = news.title,
-                maxLines = 2,
-                lineHeight = 18.sp,
-                fontFamily = RockWell,
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Bold,
-                overflow = TextOverflow.Ellipsis,
-            )
+            news.title?.let {
+                Text(
+                    modifier = Modifier.padding(top = 8.dp, end = 4.dp),
+                    text = it,
+                    maxLines = 2,
+                    lineHeight = 18.sp,
+                    fontFamily = RockWell,
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold,
+                    overflow = TextOverflow.Ellipsis,
+                )
+            }
 
             Text(
                 modifier = Modifier.padding(top = 6.dp, end = 4.dp),

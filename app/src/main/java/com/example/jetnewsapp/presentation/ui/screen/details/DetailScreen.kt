@@ -7,6 +7,7 @@ import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -22,18 +23,19 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
-import com.example.jetnewsapp.data.model.NewsResponse
-import com.example.jetnewsapp.utils.dummyNewsItem
 import com.example.jetnewsapp.presentation.ui.screen.news.NewsAppBar
 import com.example.jetnewsapp.presentation.ui.theme.*
 import com.example.jetnewsapp.R
+import com.example.jetnewsapp.data.model.NewsResponse
 import com.example.jetnewsapp.presentation.ui.theme.Calisto
 import com.example.jetnewsapp.presentation.ui.theme.Grey
 import com.example.jetnewsapp.presentation.ui.theme.PrimaryRed
 import com.example.jetnewsapp.presentation.ui.theme.RockWell
+import com.example.jetnewsapp.utils.dummyNewsItem
 
 @Composable
 fun DetailScreen(
@@ -50,8 +52,9 @@ fun DetailScreen(
                 navController.navigateUp()
             }
         },
-        backgroundColor = Color.Transparent,
-    ) { innerPadding ->
+        backgroundColor = Color.Transparent
+    ) {
+        innerPadding ->
         if (newsItem == null) {
             Box(
                 modifier = Modifier.fillMaxSize(),
@@ -79,22 +82,26 @@ fun DetailScreen(
                         .weight(1f),
                 ) {
 
-                    Text(
-                        text = newsItem.title,
-                        lineHeight = 28.sp,
-                        fontFamily = RockWell,
-                        fontSize = 24.sp,
-                        fontWeight = FontWeight.Bold,
-                        overflow = TextOverflow.Ellipsis
-                    )
-                    Text(
-                        modifier = Modifier.padding(top = 8.dp),
-                        text = newsItem.publishedAt,
-                        lineHeight = 18.sp,
-                        fontSize = 15.sp,
-                        color = Grey,
-                        fontFamily = Calisto
-                    )
+                    newsItem.title?.let {
+                        Text(
+                            text = it,
+                            lineHeight = 28.sp,
+                            fontFamily = RockWell,
+                            fontSize = 24.sp,
+                            fontWeight = FontWeight.Bold,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                    }
+                    newsItem.publishedAt?.let {
+                        Text(
+                            modifier = Modifier.padding(top = 8.dp),
+                            text = it,
+                            lineHeight = 18.sp,
+                            fontSize = 15.sp,
+                            color = Grey,
+                            fontFamily = Calisto
+                        )
+                    }
                     Text(
                         modifier = Modifier.padding(top = 8.dp),
                         text = newsItem.author ?: "----",
@@ -118,15 +125,17 @@ fun DetailScreen(
                         colorFilter = ColorFilter.colorMatrix(matrix),
                         contentDescription = null
                     )
-                    Text(
-                        modifier = Modifier.padding(top = 8.dp),
-                        text = newsItem.content ?: newsItem.description,
-                        color = Black,
-                        lineHeight = 22.sp,
-                        fontSize = 17.sp,
-                        fontWeight = FontWeight.Bold,
-                        fontFamily = Calisto
-                    )
+                    (newsItem.content ?: newsItem.description)?.let {
+                        Text(
+                            modifier = Modifier.padding(top = 8.dp),
+                            text = it,
+                            color = Black,
+                            lineHeight = 22.sp,
+                            fontSize = 17.sp,
+                            fontWeight = FontWeight.Bold,
+                            fontFamily = Calisto
+                        )
+                    }
                 }
                 Button(
                     modifier = Modifier
@@ -159,6 +168,6 @@ fun DetailScreen(
 fun DetailsScreenPreview() {
     DetailScreen(
         navController = rememberNavController(),
-        newsItem = dummyNewsItem
+        newsItem  = dummyNewsItem
     )
 }

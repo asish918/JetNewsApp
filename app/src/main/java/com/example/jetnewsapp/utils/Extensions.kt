@@ -3,8 +3,8 @@ package com.example.jetnewsapp.utils
 import android.os.Build.VERSION.SDK_INT
 import android.os.Bundle
 import android.os.Parcelable
+import java.net.URLDecoder
+import java.net.URLEncoder
 
-inline fun <reified T : Parcelable> Bundle.parcelable(key: String): T? = when {
-    SDK_INT >= 33 -> getParcelable(key, T::class.java)
-    else -> @Suppress("DEPRECATION") getParcelable(key) as? T
-}
+fun decode(url: String?) = URLDecoder.decode(url ?: "", "UTF-8")
+fun encode(url: String?) = URLEncoder.encode(url ?: "", "UTF-8")

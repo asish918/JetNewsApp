@@ -39,7 +39,7 @@ fun NewsSlider(
 
     Row(
         modifier = modifier
-            .fillMaxWidth(fraction = .5f)
+            .fillMaxWidth(fraction = 5f)
             .height(180.dp)
             .clickable {
                 onNewsClick()
@@ -59,21 +59,23 @@ fun NewsSlider(
                 fontFamily = RockWell
             )
 
-            Text(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(128.dp)
-                    .padding(top = 4.dp),
-                text = news.title,
-                lineHeight = 22.sp,
-                fontStyle = FontStyle.Normal,
-                fontWeight = FontWeight.Bold,
-                maxLines = 5,
-                overflow = TextOverflow.Ellipsis,
-                color = Black,
-                fontSize = 22.sp,
-                fontFamily = RockWell
-            )
+            news.title?.let {
+                Text(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(128.dp)
+                        .padding(top = 4.dp),
+                    text = it,
+                    lineHeight = 22.sp,
+                    fontStyle = FontStyle.Normal,
+                    fontWeight = FontWeight.Bold,
+                    maxLines = 5,
+                    overflow = TextOverflow.Ellipsis,
+                    color = Black,
+                    fontSize = 22.sp,
+                    fontFamily = RockWell
+                )
+            }
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
