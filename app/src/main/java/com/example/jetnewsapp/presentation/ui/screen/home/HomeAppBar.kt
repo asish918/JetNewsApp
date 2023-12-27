@@ -3,15 +3,19 @@ package com.example.jetnewsapp.presentation.ui.screen.home
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.IconButton
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImagePainter.State.Empty.painter
+import com.example.jetnewsapp.R
 import com.example.jetnewsapp.presentation.ui.theme.Black
 import com.example.jetnewsapp.presentation.ui.theme.Calisto
 import com.example.jetnewsapp.presentation.ui.theme.RockWell
@@ -23,14 +27,17 @@ import java.util.Date
 import java.util.Locale
 
 @Composable
-fun HomeAppBar() {
+fun HomeAppBar(
+    openDrawer: () -> Unit = {},
+) {
     val currentDate = LocalDate.now()
     val formatter = SimpleDateFormat("EEEE, MMMM d, yyyy", Locale.getDefault())
     val formattedDate = formatter.format(Date.from(currentDate.atStartOfDay(ZoneId.systemDefault()).toInstant()))
 
 
     Column(
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier
+            .fillMaxWidth()
             .padding(horizontal = 8.dp)
     ) {
 
@@ -45,27 +52,36 @@ fun HomeAppBar() {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 20.dp, start = 8.dp, end = 8.dp),
+                .padding(top = 2.dp, start = 8.dp, end = 8.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
 
-            Image(
+            IconButton(
+                onClick = openDrawer,
                 modifier = Modifier
                     .width(40.dp)
                     .height(40.dp),
-                painter = painterResource(id = ResourceDrawable.ic_menu),
-                contentDescription = null
-            )
+            ) {
+                Image(
+                    painter = painterResource(id = ResourceDrawable.ic_menu),
+                    contentDescription = null
+                )
+            }
 
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text(
-                    text = "DAILY NEWS",
-                    fontFamily = RockWell,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 20.sp
+//                Text(
+//                    text = "DAILY NEWS",
+//                    fontFamily = RockWell,
+//                    fontWeight = FontWeight.Bold,
+//                    fontSize = 20.sp
+//                )
+                Image(
+                    painter = painterResource(id = R.drawable.newspaper_logo),
+                    contentDescription = "logo",
+                    modifier = Modifier.height(25.dp).padding(bottom = 4.dp)
                 )
                 Text(
                     text = formattedDate,

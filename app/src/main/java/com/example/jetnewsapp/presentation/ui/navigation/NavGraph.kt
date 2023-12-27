@@ -16,6 +16,7 @@ import com.example.jetnewsapp.utils.decode
 @Composable
 fun AppNavGraph(
     navController: NavHostController,
+    openDrawer: () -> Unit = {},
 ) {
 
     NavHost(
@@ -27,7 +28,7 @@ fun AppNavGraph(
             SplashScreen(navController = navController)
         }
         composable(route = Screen.Home.route) {
-            HomeScreen(navController = navController)
+            HomeScreen(navController = navController, openDrawer = openDrawer)
         }
         composable(
             route = "${Screen.Detail.route}/{title}/{desc}/{imgUrl}/{content}/{pubAt}/{author}",

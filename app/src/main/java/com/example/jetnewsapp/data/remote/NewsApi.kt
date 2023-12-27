@@ -8,22 +8,22 @@ import retrofit2.http.Query
 interface NewsApi {
 
     companion object {
-        const val BASE_URL = "https://newsapi.org/v2/"
+        const val BASE_URL = "https://news-api-dummy.onrender.com/"
     }
 
-    @GET("top-headlines")
+    @GET("news")
     suspend fun getTopHeadLines(
         @Query("country") country: String = "in",
         @Query("apiKey") apiKey: String = BuildConfig.API_KEY,
     ): NewsResponse
 
 
-    @GET("everything?q=technology")
+    @GET("news")
     suspend fun getEverything(
         @Query("apiKey") apiKey: String = BuildConfig.API_KEY,
     ): NewsResponse
 
-    @GET("top-headlines")
+    @GET("news")
     suspend fun getNewsByCategory(
         @Query("category") category: String,
         @Query("country") country: String = "in",
@@ -32,7 +32,7 @@ interface NewsApi {
         @Query("pageSize") pageSize: Int
     ): NewsResponse
 
-    @GET("everything")
+    @GET("news")
     suspend fun searchNews(
         @Query("apiKey") apiKey: String = BuildConfig.API_KEY,
         @Query("q") query: String,

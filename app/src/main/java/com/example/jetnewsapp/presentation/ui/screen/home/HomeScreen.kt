@@ -31,7 +31,8 @@ import com.example.jetnewsapp.utils.encode
 @Composable
 fun HomeScreen(
     navController: NavController,
-    viewModel: HomeViewModel = hiltViewModel()
+    viewModel: HomeViewModel = hiltViewModel(),
+    openDrawer: () -> Unit = {},
 ) {
 
     val state = viewModel.state
@@ -41,7 +42,9 @@ fun HomeScreen(
     val everything = state.value.news.everything
 
     Scaffold(
-        topBar = { HomeAppBar() },
+        topBar = { HomeAppBar(
+            openDrawer = openDrawer
+        ) },
         backgroundColor = Color.Transparent,
     ) {
         innerPadding ->
