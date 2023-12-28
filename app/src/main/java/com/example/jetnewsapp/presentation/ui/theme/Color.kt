@@ -11,7 +11,7 @@ val Black = Color(0xFF000000)
 val White = Color(0xFFFFFFFF)
 
 val Background = Color(0xFFF3F3E9)
-val PrimaryRed = Color(0xFFD38265)
+val PrimaryRed = Color(0xFFE4542C)
 val Grey = Color(0xFF929292 )
 
 

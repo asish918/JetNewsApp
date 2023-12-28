@@ -4,18 +4,16 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.MaterialTheme.colors
+import androidx.compose.material.LinearProgressIndicator
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
-import androidx.compose.material.TextFieldColors
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Search
@@ -26,45 +24,50 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.ColorMatrix
 import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
-import coil.compose.AsyncImage
-import coil.request.ImageRequest
-import com.example.jetnewsapp.R
-import com.example.jetnewsapp.data.model.NewsResponse
-import com.example.jetnewsapp.presentation.ui.screen.details.DetailScreen
-import com.example.jetnewsapp.presentation.ui.screen.news.NewsAppBar
-import com.example.jetnewsapp.presentation.ui.theme.Black
-import com.example.jetnewsapp.presentation.ui.theme.Calisto
-import com.example.jetnewsapp.presentation.ui.theme.Grey
-import com.example.jetnewsapp.presentation.ui.theme.PrimaryRed
 import com.example.jetnewsapp.presentation.ui.theme.RockWell
 import com.example.jetnewsapp.utils.dummyNewsItem
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.TextField
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.paging.LoadState
+import androidx.paging.compose.collectAsLazyPagingItems
+import com.example.jetnewsapp.presentation.ui.navigation.Screen
+import com.example.jetnewsapp.presentation.ui.screen.news.NewsItem
+import com.example.jetnewsapp.utils.encode
+import kotlinx.coroutines.delay
 
 @Composable
 fun SearchScreen(
     navController: NavController,
+    viewModel: SearchViewModel = hiltViewModel(),
 ) {
     val trial = 123
+    val searchResult = viewModel.multiSearchState.value.collectAsLazyPagingItems()
+    var searchInput: String by remember { mutableStateOf("") }
     val focusManager = LocalFocusManager.current
 
     val matrix = ColorMatrix()
     matrix.setToSaturation(0F)
+
+    LaunchedEffect(key1 = searchInput) {
+        if (viewModel.searchParam.value.trim().isNotEmpty() &&
+            viewModel.searchParam.value.trim().length != viewModel.previousSearch.value.length
+        ) {
+            delay(750)
+            viewModel.searchRemoteMovie()
+            viewModel.previousSearch.value = searchInput.trim()
+        }
+    }
 
     Scaffold(
         topBar = {
@@ -74,8 +77,7 @@ fun SearchScreen(
             }
         },
         backgroundColor = Color.Transparent
-    ) {
-            innerPadding ->
+    ) { innerPadding ->
         if (trial == null) {
             Box(
                 modifier = Modifier.fillMaxSize(),
@@ -100,34 +102,122 @@ fun SearchScreen(
                     .padding(12.dp)
             ) {
                 OutlinedTextField(
-                    value = "",
+                    value = searchInput,
                     modifier = Modifier
                         .fillMaxWidth()
                         .background(Color.Transparent),
-                    onValueChange = {},
+                    onValueChange = { newValue ->
+                        searchInput = if (newValue.trim().isNotEmpty()) newValue else ""
+                        viewModel.searchParam.value = searchInput
+                    },
                     singleLine = true,
                     maxLines = 1,
                     textStyle = MaterialTheme.typography.titleMedium,
                     label = { Text(text = "Search News", color = Color.Black) },
                     keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
-                    keyboardActions = KeyboardActions(onSearch = { focusManager.clearFocus() }),
+                    keyboardActions = KeyboardActions(onSearch = {
+                        if (viewModel.searchParam.value.trim().isNotEmpty()) {
+                            focusManager.clearFocus()
+                            viewModel.searchParam.value = searchInput
+                            if (searchInput != viewModel.previousSearch.value) {
+                                viewModel.previousSearch.value = searchInput
+                                viewModel.searchRemoteMovie()
+                            }
+                        }
+                    }
+                    ),
                     placeholder = { Text(text = "What are you looking for?", color = Color.Black) },
                     leadingIcon = { Icon(Icons.Rounded.Search, contentDescription = "Search") },
                     colors = TextFieldDefaults.outlinedTextFieldColors(
                         focusedBorderColor = Color.Black,
-                        unfocusedBorderColor = Color.Black
+                        unfocusedBorderColor = Color.Black,
+                        cursorColor = Color.Black
                     )
                 )
+
+                LazyColumn(
+                    modifier = Modifier.fillMaxSize(),
+                    contentPadding = PaddingValues(vertical = 12.dp)
+                ) {
+                    when (searchResult.loadState.refresh) {
+                        is LoadState.NotLoading -> {
+                            items(searchResult.itemCount) { index ->
+                                val item = searchResult[index]
+                                if (item != null) {
+                                    NewsItem(news = item) {
+                                        val encodedTitle = encode(item.title)
+                                        val encodedDesc = encode(item.description)
+                                        val encodedImgUrl = encode(item.urlToImage)
+                                        val encodedContent = encode(item.content)
+                                        val encodedPubAt = encode(item.publishedAt)
+                                        val encodedAuthor = encode(item.author)
+                                        val navArgs =
+                                            "${encodedTitle}/${encodedDesc}/${encodedImgUrl}/${encodedContent}/${encodedPubAt}/${encodedAuthor}"
+                                        navController.navigate("${Screen.Detail.route}/${navArgs}")
+                                    }
+                                } else
+                                    NewsItem(news = dummyNewsItem) {
+                                        val encodedTitle = encode(dummyNewsItem.title)
+                                        val encodedDesc = encode(dummyNewsItem.description)
+                                        val encodedImgUrl = encode(dummyNewsItem.urlToImage)
+                                        val encodedContent = encode(dummyNewsItem.content)
+                                        val encodedPubAt = encode(dummyNewsItem.publishedAt)
+                                        val encodedAuthor = encode(dummyNewsItem.author)
+                                        val navArgs =
+                                            "${encodedTitle}/${encodedDesc}/${encodedImgUrl}/${encodedContent}/${encodedPubAt}/${encodedAuthor}"
+                                        navController.navigate("${Screen.Detail.route}/${navArgs}")
+                                    }
+                            }
+                            if (searchResult.itemCount == 0) {
+                                item {
+                                    Box(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(top = 60.dp),
+                                        contentAlignment = Alignment.Center
+                                    ) {
+                                        Text(text = "Hard Luck")
+                                    }
+
+                                }
+                            }
+                        }
+
+                        is LoadState.Loading -> item {
+                            if (viewModel.searchParam.value.isNotEmpty()) {
+                                Box(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    LinearProgressIndicator(
+                                        color = Color.Black
+                                    )
+                                }
+                            }
+                        }
+
+                        else -> item {
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(top = 60.dp),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Text(text = "Hard Luck")
+                            }
+                        }
+                    }
+                }
             }
         }
     }
 }
 
 
-@Preview
-@Composable
-fun SearchScreenPreview() {
-    SearchScreen(
-        navController = rememberNavController(),
-    )
-}
+//@Preview
+//@Composable
+//fun SearchScreenPreview() {
+//    SearchScreen(
+//        navController = rememberNavController(),
+//    )
+//}

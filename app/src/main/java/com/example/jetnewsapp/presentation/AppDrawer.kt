@@ -1,7 +1,6 @@
 package com.example.jetnewsapp.presentation
 
 import android.content.res.Configuration
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
@@ -13,13 +12,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ListAlt
-import androidx.compose.material.icons.automirrored.filled.MenuBook
-import androidx.compose.material.icons.filled.Bookmark
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.NavigationDrawerItem
 import androidx.compose.material3.NavigationDrawerItemDefaults
@@ -41,7 +36,6 @@ import com.example.jetnewsapp.presentation.ui.theme.Grey
 import com.example.jetnewsapp.presentation.ui.theme.JetNewsAppTheme
 import com.example.jetnewsapp.presentation.ui.theme.PrimaryRed
 import com.example.jetnewsapp.presentation.ui.theme.RockWell
-import com.example.jetnewsapp.presentation.ui.theme.ShimmerDarkGray
 
 @Composable
 fun AppDrawer(
@@ -86,7 +80,7 @@ fun AppDrawer(
                 NavigationDrawerItem(
                     label = { Text(stringResource(id = R.string.saved_title), color = Color.White) },
                     icon = { Icon(Icons.Filled.Search, null, tint = Color.White) },
-                    selected = currentRoute == Screen.News.route,
+                    selected = currentRoute == Screen.Search.route,
                     onClick = { navigateToInterests(); closeDrawer() },
                     modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding),
                     colors = NavigationDrawerItemDefaults.colors(selectedContainerColor = PrimaryRed, unselectedContainerColor = Grey),

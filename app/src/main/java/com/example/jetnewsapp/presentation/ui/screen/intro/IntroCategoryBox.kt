@@ -39,7 +39,7 @@ fun IntroCategoryBox(
                 .padding(4.dp),
             text = title,
             fontFamily = RockWell,
-            color = Color.Black
+            color = Color.White
         )
 
     }
