@@ -79,15 +79,19 @@ fun HomeScreen(
                         count = topHeadLines.size,
                         verticalAlignment = Alignment.Top
                     ) { position ->
-                        val news = topHeadLines[position]
+                        val item = topHeadLines[position]
                         NewsSlider(
-                            news = news
+                            news = item
                         ) {
-                            navController.currentBackStackEntry?.arguments?.putParcelable(
-                                "news",
-                                news
-                            )
-                            navController.navigate(Screen.Detail.route)
+                            val encodedTitle = encode(item.title)
+                            val encodedDesc = encode(item.description)
+                            val encodedImgUrl = encode(item.urlToImage)
+                            val encodedContent = encode(item.content)
+                            val encodedPubAt = encode(item.publishedAt)
+                            val encodedAuthor = encode(item.author)
+                            val encodedUrl = encode(item.url)
+                            val navArgs = "${encodedTitle}/${encodedDesc}/${encodedImgUrl}/${encodedContent}/${encodedPubAt}/${encodedAuthor}/${encodedUrl}"
+                            navController.navigate("${Screen.Detail.route}/${navArgs}")
                         }
                     }
                     if (state.value.isLoading) {
@@ -159,11 +163,14 @@ fun HomeScreen(
                 NewsItem(
                     news = item
                 ) {
+                    val encodedTitle = encode(item.title)
+                    val encodedDesc = encode(item.description)
                     val encodedImgUrl = encode(item.urlToImage)
                     val encodedContent = encode(item.content)
                     val encodedPubAt = encode(item.publishedAt)
                     val encodedAuthor = encode(item.author)
-                    val navArgs = "${item.title}/${item.description}/${encodedImgUrl}/${encodedContent}/${encodedPubAt}/${encodedAuthor}"
+                    val encodedUrl = encode(item.url)
+                    val navArgs = "${encodedTitle}/${encodedDesc}/${encodedImgUrl}/${encodedContent}/${encodedPubAt}/${encodedAuthor}/${encodedUrl}"
                     navController.navigate("${Screen.Detail.route}/${navArgs}")
                 }
                 if (index < everything.lastIndex) {

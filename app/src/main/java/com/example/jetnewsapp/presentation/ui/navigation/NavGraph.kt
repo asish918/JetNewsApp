@@ -35,7 +35,7 @@ fun AppNavGraph(
             SearchScreen(navController = navController)
         }
         composable(
-            route = "${Screen.Detail.route}/{title}/{desc}/{imgUrl}/{content}/{pubAt}/{author}",
+            route = "${Screen.Detail.route}/{title}/{desc}/{imgUrl}/{content}/{pubAt}/{author}/{url}",
             arguments = listOf(
                 navArgument("title") {type = NavType.StringType},
                 navArgument("desc") {type = NavType.StringType},
@@ -43,6 +43,7 @@ fun AppNavGraph(
                 navArgument("content") {type = NavType.StringType},
                 navArgument("pubAt") {type = NavType.StringType},
                 navArgument("author") {type = NavType.StringType},
+                navArgument("url") {type = NavType.StringType},
             )
         ) {
             val newsItem: NewsResponse.Article? = NewsResponse.Article(
@@ -52,8 +53,8 @@ fun AppNavGraph(
                 content = decode(it.arguments?.getString("content")),
                 publishedAt = decode(it.arguments?.getString("pubAt")),
                 author = decode(it.arguments?.getString("author")),
+                url = decode(it.arguments?.getString("url")),
                 source = null,
-                url = "",
             )
             DetailScreen(navController = navController, newsItem = newsItem)
 

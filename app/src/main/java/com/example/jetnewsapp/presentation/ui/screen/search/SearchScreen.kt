@@ -51,7 +51,6 @@ fun SearchScreen(
     navController: NavController,
     viewModel: SearchViewModel = hiltViewModel(),
 ) {
-    val trial = 123
     val searchResult = viewModel.multiSearchState.value.collectAsLazyPagingItems()
     var searchInput: String by remember { mutableStateOf("") }
     val focusManager = LocalFocusManager.current
@@ -78,133 +77,120 @@ fun SearchScreen(
         },
         backgroundColor = Color.Transparent
     ) { innerPadding ->
-        if (trial == null) {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    text = "Something went wrong!!!",
-                    fontFamily = RockWell,
-                    fontSize = 18.sp
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp)
+                .border(
+                    width = 1.dp,
+                    color = Color.Black,
+                    shape = RectangleShape
                 )
-            }
-        } else {
-            Column(
+                .padding(12.dp)
+        ) {
+            OutlinedTextField(
+                value = searchInput,
                 modifier = Modifier
-                    .fillMaxSize()
-                    .padding(16.dp)
-                    .border(
-                        width = 1.dp,
-                        color = Color.Black,
-                        shape = RectangleShape
-                    )
-                    .padding(12.dp)
-            ) {
-                OutlinedTextField(
-                    value = searchInput,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(Color.Transparent),
-                    onValueChange = { newValue ->
-                        searchInput = if (newValue.trim().isNotEmpty()) newValue else ""
+                    .fillMaxWidth()
+                    .background(Color.Transparent),
+                onValueChange = { newValue ->
+                    searchInput = if (newValue.trim().isNotEmpty()) newValue else ""
+                    viewModel.searchParam.value = searchInput
+                },
+                singleLine = true,
+                maxLines = 1,
+                textStyle = MaterialTheme.typography.titleMedium,
+                label = { Text(text = "Search News", color = Color.Black) },
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
+                keyboardActions = KeyboardActions(onSearch = {
+                    if (viewModel.searchParam.value.trim().isNotEmpty()) {
+                        focusManager.clearFocus()
                         viewModel.searchParam.value = searchInput
-                    },
-                    singleLine = true,
-                    maxLines = 1,
-                    textStyle = MaterialTheme.typography.titleMedium,
-                    label = { Text(text = "Search News", color = Color.Black) },
-                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
-                    keyboardActions = KeyboardActions(onSearch = {
-                        if (viewModel.searchParam.value.trim().isNotEmpty()) {
-                            focusManager.clearFocus()
-                            viewModel.searchParam.value = searchInput
-                            if (searchInput != viewModel.previousSearch.value) {
-                                viewModel.previousSearch.value = searchInput
-                                viewModel.searchRemoteMovie()
+                        if (searchInput != viewModel.previousSearch.value) {
+                            viewModel.previousSearch.value = searchInput
+                            viewModel.searchRemoteMovie()
+                        }
+                    }
+                }
+                ),
+                placeholder = { Text(text = "What are you looking for?", color = Color.Black) },
+                leadingIcon = { Icon(Icons.Rounded.Search, contentDescription = "Search") },
+                colors = TextFieldDefaults.outlinedTextFieldColors(
+                    focusedBorderColor = Color.Black,
+                    unfocusedBorderColor = Color.Black,
+                    cursorColor = Color.Black
+                )
+            )
+
+            LazyColumn(
+                modifier = Modifier.fillMaxSize(),
+                contentPadding = PaddingValues(vertical = 12.dp)
+            ) {
+                when (searchResult.loadState.refresh) {
+                    is LoadState.NotLoading -> {
+                        items(searchResult.itemCount) { index ->
+                            val item = searchResult[index]
+                            if (item != null) {
+                                NewsItem(news = item) {
+                                    val encodedTitle = encode(item.title)
+                                    val encodedDesc = encode(item.description)
+                                    val encodedImgUrl = encode(item.urlToImage)
+                                    val encodedContent = encode(item.content)
+                                    val encodedPubAt = encode(item.publishedAt)
+                                    val encodedAuthor = encode(item.author)
+                                    val encodedUrl = encode(item.url)
+                                    val navArgs = "${encodedTitle}/${encodedDesc}/${encodedImgUrl}/${encodedContent}/${encodedPubAt}/${encodedAuthor}/${encodedUrl}"
+                                    navController.navigate("${Screen.Detail.route}/${navArgs}")
+                                }
+                            } else
+                                NewsItem(news = dummyNewsItem) {
+                                    val encodedTitle = encode(dummyNewsItem.title)
+                                    val encodedDesc = encode(dummyNewsItem.description)
+                                    val encodedImgUrl = encode(dummyNewsItem.urlToImage)
+                                    val encodedContent = encode(dummyNewsItem.content)
+                                    val encodedPubAt = encode(dummyNewsItem.publishedAt)
+                                    val encodedAuthor = encode(dummyNewsItem.author)
+                                    val encodedUrl = encode(dummyNewsItem.url)
+                                    val navArgs = "${encodedTitle}/${encodedDesc}/${encodedImgUrl}/${encodedContent}/${encodedPubAt}/${encodedAuthor}/${encodedUrl}"
+                                    navController.navigate("${Screen.Detail.route}/${navArgs}")
+                                }
+                        }
+                        if (searchResult.itemCount == 0) {
+                            item {
+                                Box(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(top = 60.dp),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Text(text = "Hard Luck")
+                                }
+
                             }
                         }
                     }
-                    ),
-                    placeholder = { Text(text = "What are you looking for?", color = Color.Black) },
-                    leadingIcon = { Icon(Icons.Rounded.Search, contentDescription = "Search") },
-                    colors = TextFieldDefaults.outlinedTextFieldColors(
-                        focusedBorderColor = Color.Black,
-                        unfocusedBorderColor = Color.Black,
-                        cursorColor = Color.Black
-                    )
-                )
 
-                LazyColumn(
-                    modifier = Modifier.fillMaxSize(),
-                    contentPadding = PaddingValues(vertical = 12.dp)
-                ) {
-                    when (searchResult.loadState.refresh) {
-                        is LoadState.NotLoading -> {
-                            items(searchResult.itemCount) { index ->
-                                val item = searchResult[index]
-                                if (item != null) {
-                                    NewsItem(news = item) {
-                                        val encodedTitle = encode(item.title)
-                                        val encodedDesc = encode(item.description)
-                                        val encodedImgUrl = encode(item.urlToImage)
-                                        val encodedContent = encode(item.content)
-                                        val encodedPubAt = encode(item.publishedAt)
-                                        val encodedAuthor = encode(item.author)
-                                        val navArgs =
-                                            "${encodedTitle}/${encodedDesc}/${encodedImgUrl}/${encodedContent}/${encodedPubAt}/${encodedAuthor}"
-                                        navController.navigate("${Screen.Detail.route}/${navArgs}")
-                                    }
-                                } else
-                                    NewsItem(news = dummyNewsItem) {
-                                        val encodedTitle = encode(dummyNewsItem.title)
-                                        val encodedDesc = encode(dummyNewsItem.description)
-                                        val encodedImgUrl = encode(dummyNewsItem.urlToImage)
-                                        val encodedContent = encode(dummyNewsItem.content)
-                                        val encodedPubAt = encode(dummyNewsItem.publishedAt)
-                                        val encodedAuthor = encode(dummyNewsItem.author)
-                                        val navArgs =
-                                            "${encodedTitle}/${encodedDesc}/${encodedImgUrl}/${encodedContent}/${encodedPubAt}/${encodedAuthor}"
-                                        navController.navigate("${Screen.Detail.route}/${navArgs}")
-                                    }
-                            }
-                            if (searchResult.itemCount == 0) {
-                                item {
-                                    Box(
-                                        modifier = Modifier
-                                            .fillMaxWidth()
-                                            .padding(top = 60.dp),
-                                        contentAlignment = Alignment.Center
-                                    ) {
-                                        Text(text = "Hard Luck")
-                                    }
-
-                                }
-                            }
-                        }
-
-                        is LoadState.Loading -> item {
-                            if (viewModel.searchParam.value.isNotEmpty()) {
-                                Box(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    contentAlignment = Alignment.Center
-                                ) {
-                                    LinearProgressIndicator(
-                                        color = Color.Black
-                                    )
-                                }
-                            }
-                        }
-
-                        else -> item {
+                    is LoadState.Loading -> item {
+                        if (viewModel.searchParam.value.isNotEmpty()) {
                             Box(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(top = 60.dp),
+                                modifier = Modifier.fillMaxWidth(),
                                 contentAlignment = Alignment.Center
                             ) {
-                                Text(text = "Hard Luck")
+                                LinearProgressIndicator(
+                                    color = Color.Black
+                                )
                             }
+                        }
+                    }
+
+                    else -> item {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(top = 60.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(text = "Hard Luck")
                         }
                     }
                 }

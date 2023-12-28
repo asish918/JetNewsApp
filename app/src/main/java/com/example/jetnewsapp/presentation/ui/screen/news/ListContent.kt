@@ -41,7 +41,8 @@ fun ListContent(
                         val encodedContent = encode(item.content)
                         val encodedPubAt = encode(item.publishedAt)
                         val encodedAuthor = encode(item.author)
-                        val navArgs = "${encodedTitle}/${encodedDesc}/${encodedImgUrl}/${encodedContent}/${encodedPubAt}/${encodedAuthor}"
+                        val encodedUrl = encode(item.url)
+                        val navArgs = "${encodedTitle}/${encodedDesc}/${encodedImgUrl}/${encodedContent}/${encodedPubAt}/${encodedAuthor}/${encodedUrl}"
                         navController.navigate("${Screen.Detail.route}/${navArgs}")
                     }
                     Box(

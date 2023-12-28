@@ -22,6 +22,7 @@ import com.example.jetnewsapp.presentation.ui.theme.Black
 import com.example.jetnewsapp.presentation.ui.theme.Calisto
 import com.example.jetnewsapp.presentation.ui.theme.RockWell
 import com.example.jetnewsapp.utils.ResourceDrawable
+import com.example.jetnewsapp.utils.dateFormatter
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.ZoneId
@@ -34,8 +35,7 @@ fun HomeAppBar(
     navController: NavController?,
     ) {
     val currentDate = LocalDate.now()
-    val formatter = SimpleDateFormat("EEEE, MMMM d, yyyy", Locale.getDefault())
-    val formattedDate = formatter.format(Date.from(currentDate.atStartOfDay(ZoneId.systemDefault()).toInstant()))
+    val formattedDate = dateFormatter(currentDate)
 
 
     Column(

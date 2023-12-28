@@ -1,5 +1,6 @@
 package com.example.jetnewsapp.presentation.ui.screen.details
 
+import android.util.Log
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
@@ -16,6 +17,7 @@ import androidx.compose.ui.graphics.ColorMatrix
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -35,13 +37,16 @@ import com.example.jetnewsapp.presentation.ui.theme.Calisto
 import com.example.jetnewsapp.presentation.ui.theme.Grey
 import com.example.jetnewsapp.presentation.ui.theme.PrimaryRed
 import com.example.jetnewsapp.presentation.ui.theme.RockWell
+import com.example.jetnewsapp.utils.dateFormatter
 import com.example.jetnewsapp.utils.dummyNewsItem
+import com.example.jetnewsapp.utils.formatPubAt
 
 @Composable
 fun DetailScreen(
     navController: NavController,
     newsItem: NewsResponse.Article?
 ) {
+    val localUriHandler = LocalUriHandler.current
 
     val matrix = ColorMatrix()
     matrix.setToSaturation(0F)
@@ -69,6 +74,7 @@ fun DetailScreen(
                 )
             }
         } else {
+            newsItem.publishedAt?.let { Log.i("Bimch", it) }
             Column(
                 modifier = Modifier.fillMaxSize()
                     .padding(16.dp)
@@ -97,7 +103,7 @@ fun DetailScreen(
                     newsItem.publishedAt?.let {
                         Text(
                             modifier = Modifier.padding(top = 8.dp),
-                            text = it,
+                            text = formatPubAt(it),
                             lineHeight = 18.sp,
                             fontSize = 15.sp,
                             color = Grey,
@@ -149,7 +155,7 @@ fun DetailScreen(
                     ),
                     shape = RectangleShape,
                     onClick = {
-
+                        localUriHandler.openUri(newsItem.url)
                     }) {
                     Text(
                         text = stringResource(R.string.read_full_article),
