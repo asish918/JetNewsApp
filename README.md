@@ -51,6 +51,8 @@
 
 ![Product Name Screen Shot][product-screenshot]
 
+https://github.com/asish918/JetNewsApp/assets/77532867/c1289ec5-0dc5-4970-a903-91d133505475
+
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ### Built Using Clean MVVM Architecture
@@ -100,7 +102,7 @@ Asish Mahapatra - asishmahapatra918@gmail.com
 
 By the time you stumble upon this app, a lot of libraries might have been deprecated. So make sure you take special care in updating and reworking the code if you are seeing this repo years after it was made.
 
-Project Link: [https://github.com/asish918/JetMusic](https://github.com/asish918/JetMusic)
+Project Link: [https://github.com/asish918/JetNewsApp](https://github.com/asish918/JetNewsApp)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
